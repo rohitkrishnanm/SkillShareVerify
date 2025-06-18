@@ -33,7 +33,7 @@ A sophisticated assignment verification system built with Streamlit that leverag
 1. Clone the repository:
 ```bash
 git clone https://github.com/yourusername/skillshareverify.git
-cd bia-scholarverify
+cd skillshareverify
 ```
 
 2. Install required packages:
