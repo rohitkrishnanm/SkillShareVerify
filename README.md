@@ -50,7 +50,6 @@ streamlit run app.py
 
 1. **Student Login**
    - Enter your full name
-   - Select your institution location
 
 2. **Assignment Submission**
    - Upload or input assignment question
