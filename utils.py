@@ -15,7 +15,11 @@ import re
 
 from openai import OpenAI
 
-client = OpenAI(api_key=st.secrets["openai"]["api_key"])
+# Configure OpenAI API key from Streamlit secrets
+openai.api_key = st.secrets["openai"]["api_key"]
+
+# Instantiate the official OpenAI client
+client = openai.OpenAI()
 
 
 
