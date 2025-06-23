@@ -153,7 +153,7 @@ def generate_pdf_report(student_name, institution, question_summary, feedback, s
         spaceAfter=20,
         alignment=TA_CENTER
     )
-    story.append(Paragraph("BIA ScholarVerify™ Report", title_style))
+    story.append(Paragraph("SkillShareVerify™ Report", title_style))
 
     # Header with timestamp
     story.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
@@ -228,7 +228,7 @@ def generate_pdf_report(student_name, institution, question_summary, feedback, s
 
     # Footer with contact details
     story.append(Spacer(1, 50))
-    story.append(Paragraph("Generated via BIA ScholarVerify™", styles['Normal']))
+    story.append(Paragraph("Generated via SkillShareVerify™", styles['Normal']))
     story.append(Paragraph("Created by Rohit Krishnan", styles['Normal']))
     story.append(Paragraph("Contact Information:", styles['Normal']))
     story.append(Paragraph("📧 Email: rohitkrishnanm@gmail.com", styles['Normal']))
