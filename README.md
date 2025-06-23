@@ -1,12 +1,12 @@
-# BIA ScholarVerify™ 🎓
-### AI-Powered Assignment Evaluation System for BIA Students  
+# SkillShareVerify™ 🎓
+### AI-Powered Assignment Evaluation System for SkillShare Students  
 **Developed by [Rohit Krishnan](https://rohitkrishnan.co.in)**
 
 ---
 
 ## 📌 Overview
 
-**BIA ScholarVerify™** is a Streamlit-based smart submission and analysis app designed for the **Boston Institute of Analytics (BIA)**. It allows students to upload assignments, receive instant feedback powered by **OpenAI GPT**, and download a personalized report.
+**SkillShareVerify™** is a Streamlit-based smart submission and analysis app designed for the **SKILLSHARE**. It allows students to upload assignments, receive instant feedback powered by **OpenAI GPT**, and download a personalized report.
 
 This system is built to automate:
 - Assignment submission validation
@@ -19,7 +19,6 @@ This system is built to automate:
 ## 🚀 Features
 
 ### 🎓 Student Features
-- Enter name & select institution (BIA Kottayam / Trivandrum)
 - Upload assignment question (file or text)
 - Optional upload of supporting documents
 - Upload final answer (PDF, `.ipynb`, `.py`)
@@ -76,8 +75,8 @@ This system is built to automate:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/bia-scholarverify.git
-cd bia-scholarverify
+git clone https://github.com/yourusername/skillshareverify.git
+cd skillshareverify
 ```
 
 2. Install required packages:
@@ -142,7 +141,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- BIA (Business Intelligence Academy)
+- SkillShare (Business Intelligence Academy)
 - Streamlit community
 - All contributors and users of the system
 
