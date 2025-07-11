@@ -54,12 +54,12 @@ def analyze_submission(question, supporting_docs, final_output):
     {final_output}
     
     Evaluate the submission based on these criteria (Total 10 marks):
-    1. Code Quality and Structure (5 marks)
-    2. Problem-Solving Approach (2 marks)
-    3. Documentation and Comments (2 marks)
-    4. Best Practices (1 mark)
+    1. Code Quality and Structure (5 marks) - Evaluate code organization, logic, efficiency, and structure
+    2. Problem-Solving Approach (2 marks) - Assess how well the problem was understood and solved
+    3. Documentation and Comments (2 marks) - Check for clear comments, documentation, and readability
+    4. Best Practices (1 mark) - Evaluate adherence to coding standards and best practices
 
-    Provide feedback in this format:
+    Provide feedback in this EXACT format:
 
     STRENGTHS:
     [Write a short paragraph summarizing the main strengths.]
@@ -78,13 +78,13 @@ def analyze_submission(question, supporting_docs, final_output):
     FINAL VERDICT:
     [Write a short paragraph with the final verdict and encouragement.]
 
-    Please strictly follow this format so that each score breakdown line is present and detailed.
+    IMPORTANT: Be consistent and objective in your scoring. Use the same criteria for similar submissions. Score must be a whole number or decimal (e.g., 7.5, 8.0).
     """
     
     response = client.chat.completions.create(
     model="gpt-4.1-nano",
     messages=[{"role": "user", "content": prompt}],
-    temperature=0.7
+    temperature=0.0
     )
 
     
