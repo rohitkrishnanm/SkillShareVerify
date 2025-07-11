@@ -12,9 +12,26 @@ from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.units import inch
 import streamlit as st
 import re
+import hashlib
+import json
 
 client = OpenAI(api_key=st.secrets["openai"]["api_key"])
 
+CACHE_DIR = ".cache"
+os.makedirs(CACHE_DIR, exist_ok=True)
+
+
+def normalize_text(text):
+    if not text:
+        return ""
+    return '\n'.join(line.strip() for line in text.strip().splitlines())
+
+def get_cache_key(question, supporting_docs, final_output):
+    norm_q = normalize_text(question)
+    norm_s = normalize_text(supporting_docs)
+    norm_f = normalize_text(final_output)
+    key_str = json.dumps({"q": norm_q, "s": norm_s, "f": norm_f}, sort_keys=True)
+    return hashlib.sha256(key_str.encode('utf-8')).hexdigest()
 
 def extract_text_from_file(file):
     """Extract text from various file types."""
@@ -40,7 +57,13 @@ def extract_text_from_file(file):
     return ""
 
 def analyze_submission(question, supporting_docs, final_output):
-    """Analyze submission using GPT-4.1-nano."""
+    """Analyze submission using GPT-4.1-nano with caching for identical input."""
+    cache_key = get_cache_key(question, supporting_docs, final_output)
+    cache_path = os.path.join(CACHE_DIR, f"{cache_key}.json")
+    if os.path.exists(cache_path):
+        with open(cache_path, 'r', encoding='utf-8') as f:
+            cached = json.load(f)
+            return cached["result"]
     prompt = f"""
     You are Rohit Krishnan, a Business and Technology Strategist and an experienced Senior instructor at Boston Institute of Analytics. Analyze the following assignment submission with an encouraging and supporting tone and provide detailed feedback.
 
@@ -80,15 +103,15 @@ def analyze_submission(question, supporting_docs, final_output):
 
     IMPORTANT: Be consistent and objective in your scoring. Use the same criteria for similar submissions. Score must be a whole number or decimal (e.g., 7.5, 8.0).
     """
-    
     response = client.chat.completions.create(
     model="gpt-4.1-nano",
     messages=[{"role": "user", "content": prompt}],
     temperature=0.0
     )
-
-    
-    return response.choices[0].message.content
+    result = response.choices[0].message.content
+    with open(cache_path, 'w', encoding='utf-8') as f:
+        json.dump({"result": result}, f)
+    return result
 
 def clean_bullets(text):
     # Remove markdown and extra symbols, split on dash, and clean
