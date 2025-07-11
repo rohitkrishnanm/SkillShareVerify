@@ -16,6 +16,53 @@ import time
 import csv
 import git
 
+# CSV Configuration
+CSV_DIR = 'submission_records'
+CSV_PATH = os.path.join(CSV_DIR, 'submissions.csv')
+os.makedirs(CSV_DIR, exist_ok=True)
+
+CSV_FIELDS = ["ID", "Timestamp", "Student Name", "Institution", "Question Summary", "Score", "Evaluation Result"]
+
+def git_commit_and_push(file_path, commit_message):
+    try:
+        repo_path = os.getcwd()  # Assumes app is run from repo root
+        repo = git.Repo(repo_path)
+        repo.git.add(file_path)
+        repo.index.commit(commit_message)
+        origin = repo.remote(name='origin')
+        # Set credentials for HTTPS push
+        token = st.secrets["github"]["token"]
+        username = st.secrets["github"]["username"]
+        repo_url = f"https://{username}:{token}@github.com/{username}/{st.secrets['github']['repo']}.git"
+        origin.set_url(repo_url)
+        origin.push()
+        return True
+    except Exception as e:
+        st.error(f"Git push failed: {str(e)}")
+        return False
+
+def append_submission_to_csv(row):
+    file_exists = os.path.isfile(CSV_PATH)
+    with open(CSV_PATH, 'a', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDS)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow(row)
+
+def remove_submission_from_csv(submission_id):
+    if not os.path.isfile(CSV_PATH):
+        return
+    rows = []
+    with open(CSV_PATH, 'r', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if str(row["ID"]) != str(submission_id):
+                rows.append(row)
+    with open(CSV_PATH, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+
 # Page config
 st.set_page_config(
     page_title="SkillShareVerify™",
@@ -456,50 +503,3 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 init_db() 
-
-CSV_DIR = 'submission_records'
-CSV_PATH = os.path.join(CSV_DIR, 'submissions.csv')
-os.makedirs(CSV_DIR, exist_ok=True)
-
-CSV_FIELDS = ["ID", "Timestamp", "Student Name", "Institution", "Question Summary", "Score", "Evaluation Result"]
-
-def git_commit_and_push(file_path, commit_message):
-    try:
-        repo_path = os.getcwd()  # Assumes app is run from repo root
-        repo = git.Repo(repo_path)
-        repo.git.add(file_path)
-        repo.index.commit(commit_message)
-        origin = repo.remote(name='origin')
-        # Set credentials for HTTPS push
-        token = st.secrets["github"]["token"]
-        username = st.secrets["github"]["username"]
-        repo_url = f"https://{username}:{token}@github.com/{username}/{st.secrets['github']['repo']}.git"
-        origin.set_url(repo_url)
-        origin.push()
-        return True
-    except Exception as e:
-        st.error(f"Git push failed: {str(e)}")
-        return False
-        
-    def append_submission_to_csv(row):
-        file_exists = os.path.isfile(CSV_PATH)
-        with open(CSV_PATH, 'a', newline='', encoding='utf-8') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDS)
-            if not file_exists:
-                writer.writeheader()
-            writer.writerow(row)
-
-def remove_submission_from_csv(submission_id):
-    if not os.path.isfile(CSV_PATH):
-        return
-    rows = []
-    with open(CSV_PATH, 'r', newline='', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            if str(row["ID"]) != str(submission_id):
-                rows.append(row)
-    with open(CSV_PATH, 'w', newline='', encoding='utf-8') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDS)
-        writer.writeheader()
-        writer.writerows(rows) 
-                
