@@ -13,6 +13,7 @@ import pandas as pd
 import re
 import random
 import time
+import csv
 
 # Page config
 st.set_page_config(
@@ -347,6 +348,7 @@ def show_trainer_dashboard():
         cols[5].write(row["Timestamp"])
         if cols[6].button("Delete", key=f"delete_{row['ID']}"):
             delete_submission(row["ID"])
+            remove_submission_from_csv(row["ID"])
             st.rerun()
     # Download button
     csv = df.to_csv(index=False).encode('utf-8')
@@ -452,3 +454,32 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 init_db() 
+
+CSV_DIR = 'submission_records'
+CSV_PATH = os.path.join(CSV_DIR, 'submissions.csv')
+os.makedirs(CSV_DIR, exist_ok=True)
+
+CSV_FIELDS = ["ID", "Timestamp", "Student Name", "Institution", "Question Summary", "Score", "Evaluation Result"]
+
+def append_submission_to_csv(row):
+    file_exists = os.path.isfile(CSV_PATH)
+    with open(CSV_PATH, 'a', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDS)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow(row)
+
+def remove_submission_from_csv(submission_id):
+    if not os.path.isfile(CSV_PATH):
+        return
+    rows = []
+    with open(CSV_PATH, 'r', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if str(row["ID"]) != str(submission_id):
+                rows.append(row)
+    with open(CSV_PATH, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows) 
+                
