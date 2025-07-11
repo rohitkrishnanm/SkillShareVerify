@@ -482,12 +482,12 @@ def git_commit_and_push(file_path, commit_message):
         return False
         
     def append_submission_to_csv(row):
-    file_exists = os.path.isfile(CSV_PATH)
-    with open(CSV_PATH, 'a', newline='', encoding='utf-8') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDS)
-        if not file_exists:
-            writer.writeheader()
-        writer.writerow(row)
+        file_exists = os.path.isfile(CSV_PATH)
+        with open(CSV_PATH, 'a', newline='', encoding='utf-8') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDS)
+            if not file_exists:
+                writer.writeheader()
+            writer.writerow(row)
 
 def remove_submission_from_csv(submission_id):
     if not os.path.isfile(CSV_PATH):
